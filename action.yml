@@ -1,0 +1,77 @@
+name: 'Elixir CI'
+description: 'Runs Elixir compile, test, dialyzer commands'
+inputs:
+  mix-env:
+    description: 'MIX ENV variable'
+    required: false
+    default: "test"
+  working-directory:
+    description: 'Working directory'
+    required: false
+    default: '.'
+
+runs:
+  using: 'composite'
+  steps:
+  - name: Restore dependencies cache
+    id: mix-deps-cache
+    uses: actions/cache@v2
+    with:
+      path: ${{inputs.working-directory}}/deps
+      key: ${{ runner.os }}-${{ env.ELIXIR_ERLANG_VERSION }}-mix-${{ hashFiles('**/mix.lock') }}-${{ env.MIX_ENV }}
+
+  - name: Restore PLT cache
+    uses: actions/cache@v2
+    with:
+      path: ${{inputs.working-directory}}/priv/plts
+      key: ${{ runner.os }}-${{ env.ELIXIR_ERLANG_VERSION }}-mix-${{ hashFiles('**/mix.lock') }}-${{ env.MIX_ENV }}
+
+  - name: Install dependencies
+    if: steps.mix-deps-cache.outputs.cache-hit != 'true'
+    run: mix deps.get
+    shell: bash
+    working-directory: ${{ inputs.working-directory }}
+    env:
+      MIX_ENV: ${{ inputs.mix-env }}
+
+  - name: Compile prod with warnings as errors
+    run: mix compile --warnings-as-errors
+    shell: bash
+    working-directory: ${{ inputs.working-directory }}
+    env:
+      MIX_ENV: ${{ inputs.mix-env }}
+
+  - name: Check formatting
+    run: mix format --check-formatted
+    shell: bash
+    working-directory: ${{ inputs.working-directory }}
+    env:
+      MIX_ENV: ${{ inputs.mix-env }}
+
+  - name: Check dependencies
+    run: mix deps.unlock --check-unused
+    shell: bash
+    working-directory: ${{ inputs.working-directory }}
+    env:
+      MIX_ENV: ${{ inputs.mix-env }}
+
+  - name: Credo
+    run: mix credo
+    shell: bash
+    working-directory: ${{ inputs.working-directory }}
+    env:
+      MIX_ENV: ${{ inputs.mix-env }}
+
+  - name: Dialyzer
+    run: mix dialyzer
+    shell: bash
+    working-directory: ${{ inputs.working-directory }}
+    env:
+      MIX_ENV: ${{ inputs.mix-env }}
+
+  - name: Tests
+    run: mix test
+    shell: bash
+    working-directory: ${{ inputs.working-directory }}
+    env:
+      MIX_ENV: ${{ inputs.mix-env }}

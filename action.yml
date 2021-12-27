@@ -18,13 +18,17 @@ runs:
     uses: actions/cache@v2
     with:
       path: ${{inputs.working-directory}}/deps
-      key: ${{ runner.os }}-${{ env.ELIXIR_ERLANG_VERSION }}-mix-${{ hashFiles('**/mix.lock') }}-${{ env.MIX_ENV }}
+      key: ${{ runner.os }}-mix-${{ hashFiles(env.HASH_FILES_PATH) }}-${{ inputs.mix-env }}
+    env:
+      HASH_FILES_PATH: "${{inputs.working-directory}}/mix.lock"
 
   - name: Restore PLT cache
     uses: actions/cache@v2
     with:
       path: ${{inputs.working-directory}}/priv/plts
-      key: ${{ runner.os }}-${{ env.ELIXIR_ERLANG_VERSION }}-mix-${{ hashFiles('**/mix.lock') }}-${{ env.MIX_ENV }}
+      key: ${{ runner.os }}-mix-${{ hashFiles(env.HASH_FILES_PATH) }}-${{ inputs.mix-env }}
+    env:
+      HASH_FILES_PATH: "${{inputs.working-directory}}/mix.lock"
 
   - name: Install dependencies
     if: steps.mix-deps-cache.outputs.cache-hit != 'true'

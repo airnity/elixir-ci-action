@@ -29,7 +29,10 @@ runs:
         ${{inputs.working-directory}}/deps
         ${{inputs.working-directory}}/_build
         ${{inputs.working-directory}}/priv/plts
-      key: ${{ runner.os }}-mix-${{ hashFiles(env.HASH_FILES_PATH) }}-${{ inputs.mix-env }}
+      key: ${{ runner.os }}-mix-${{ inputs.mix-env }}-${{ hashFiles(env.HASH_FILES_PATH) }}
+      restore-keys: |
+        ${{ runner.os }}-mix-${{ inputs.mix-env }}
+        ${{ runner.os }}-mix
     env:
       HASH_FILES_PATH: "${{inputs.working-directory}}/mix.lock"
 

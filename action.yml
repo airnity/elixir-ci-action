@@ -17,6 +17,10 @@ inputs:
     description: "The name of the uploaded release"
     required: false
     default: "release"
+  release-upload:
+    description: "Wether to upload the artifact or not"
+    required: false
+    default: 'False'
 
 runs:
   using: 'composite'
@@ -97,7 +101,7 @@ runs:
       MIX_ENV: ${{ inputs.mix-env }}
 
   - uses: actions/upload-artifact@v2
-    if: ${{ inputs.release == 'True' }}
+    if: ${{ inputs.release-upload == 'True' }}
     with:
       name: ${{ inputs.release-name }}
       path: ${{ inputs.working-directory }}/_build/${{ inputs.mix-env }}/rel

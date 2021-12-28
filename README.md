@@ -32,6 +32,11 @@ _Default_: `False`
 The name of the uploaded release.
 _Default_: `release`
 
+### `release-upload`
+
+Wether to upload the artifact or not.
+_Default_: `False`
+
 ## Example usage
 
 ```yaml

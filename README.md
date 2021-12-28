@@ -22,6 +22,16 @@ _Default_: `test`
 The directory to work on.
 _Default_: `.`
 
+### `release`
+
+Wether to run mix release and upload artifact or not.
+_Default_: `False`
+
+### `release-name`
+
+The name of the uploaded release.
+_Default_: `release`
+
 ## Example usage
 
 ```yaml
@@ -30,4 +40,5 @@ _Default_: `.`
   with:
     mix-env: dev
     working-directory: "./myApp"
+    release: "True"
 ```

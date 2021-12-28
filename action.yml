@@ -9,6 +9,14 @@ inputs:
     description: 'Working directory'
     required: false
     default: '.'
+  release:
+    description: "Wether to run mix release and upload artifact or not"
+    required: false
+    default: 'False'
+  release-name:
+    description: "The name of the uploaded release"
+    required: false
+    default: "release"
 
 runs:
   using: 'composite'
@@ -56,6 +64,7 @@ runs:
 
   - name: Credo
     run: mix credo
+    if: ${{ inputs.mix-env != 'prod' }}
     shell: bash
     working-directory: ${{ inputs.working-directory }}
     env:
@@ -63,6 +72,7 @@ runs:
 
   - name: Dialyzer
     run: mix dialyzer
+    if: ${{ inputs.mix-env != 'prod' }}
     shell: bash
     working-directory: ${{ inputs.working-directory }}
     env:
@@ -74,3 +84,17 @@ runs:
     working-directory: ${{ inputs.working-directory }}
     env:
       MIX_ENV: ${{ inputs.mix-env }}
+
+  - name: Release
+    if: ${{ inputs.release == 'True' }}
+    run: mix release
+    shell: bash
+    working-directory: ${{ inputs.working-directory }}
+    env:
+      MIX_ENV: ${{ inputs.mix-env }}
+
+  - uses: actions/upload-artifact@v2
+    if: ${{ inputs.release == 'True' }}
+    with:
+      name: ${{ inputs.release-name }}
+      path: ${{ inputs.working-directory }}/_build/${{ inputs.mix-env }}/rel

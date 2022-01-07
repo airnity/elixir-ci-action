@@ -94,7 +94,7 @@ runs:
 
   - name: Release
     if: ${{ inputs.release == 'True' }}
-    run: mix release
+    run: mix release --overwrite
     shell: bash
     working-directory: ${{ inputs.working-directory }}
     env:

@@ -2,9 +2,21 @@ name: 'Elixir CI'
 description: 'Runs Elixir compile, test, dialyzer commands'
 inputs:
   mix-env:
-    description: 'MIX ENV variable'
+    description: 'MIX_ENV variable'
     required: false
     default: "test"
+  mix-env-test:
+    description: 'MIX_ENV variable for tests'
+    required: false
+    default: "test"
+  run-tests:
+    description: 'Wether to run mix test or not'
+    required: false
+    default: 'True'
+  tests-flags:
+    description: 'Flags to append to the mix test command (e.g. --only tag or --no-start, etc.)'
+    required: false
+    default: ''
   working-directory:
     description: 'Working directory'
     required: false
@@ -86,11 +98,12 @@ runs:
       MIX_ENV: ${{ inputs.mix-env }}
 
   - name: Tests
-    run: mix test
+    if: ${{ inputs.run-tests == 'True' }}
+    run: mix test ${{ inputs.tests-flags }}
     shell: bash
     working-directory: ${{ inputs.working-directory }}
     env:
-      MIX_ENV: ${{ inputs.mix-env }}
+      MIX_ENV: ${{ inputs.mix-env-test }}
 
   - name: Release
     if: ${{ inputs.release == 'True' }}

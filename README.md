@@ -17,6 +17,20 @@ Action to run multiple elixir CI commands. In order:
 The `MIX_ENV` variable to run the commands in.
 _Default_: `test`
 
+### `mix-env-test`
+
+The `MIX_ENV` variable to run tests in.
+_Default_: `test`
+
+### `run-tests`
+
+Wether to run mix test or not.
+_Default_: `True`
+
+###  `tests-flags`
+Flags to add to append to the `mix test` command (e.g. `--only tag` or `--no-start`, etc.)
+_Default_: ''
+
 ### `working-directory`
 
 The directory to work on.
@@ -41,7 +55,7 @@ _Default_: `False`
 
 ```yaml
 - name: Run elixir CI
-  uses: airnity/elixir-ci-action@v1
+  uses: airnity/elixir-ci-action@v2
   with:
     mix-env: dev
     working-directory: "./myApp"

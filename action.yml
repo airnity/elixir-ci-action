@@ -37,23 +37,32 @@ inputs:
 runs:
   using: 'composite'
   steps:
-  - name: Restore dependencies cache
-    id: mix-cache
+  - name: Restore build and dependencies cache
+    id: mix-build-dep-cache
     uses: actions/cache@v2
     with:
       path: |
         ${{inputs.working-directory}}/deps
         ${{inputs.working-directory}}/_build
+      key: ${{ runner.os }}-mix-build-dep-${{ inputs.mix-env }}-${{ hashFiles(env.HASH_FILES_PATH) }}
+    env:
+      HASH_FILES_PATH: "${{inputs.working-directory}}/mix.lock"
+
+  - name: Restore plt cache
+    id: mix-plt-cache
+    uses: actions/cache@v2
+    with:
+      path: |
         ${{inputs.working-directory}}/priv/plts
-      key: ${{ runner.os }}-mix-${{ inputs.mix-env }}-${{ hashFiles(env.HASH_FILES_PATH) }}
+      key: ${{ runner.os }}-mix-plt-${{ inputs.mix-env }}-${{ hashFiles(env.HASH_FILES_PATH) }}
       restore-keys: |
-        ${{ runner.os }}-mix-${{ inputs.mix-env }}
-        ${{ runner.os }}-mix
+        ${{ runner.os }}-mix-plt-${{ inputs.mix-env }}
+        ${{ runner.os }}-mix-plt
     env:
       HASH_FILES_PATH: "${{inputs.working-directory}}/mix.lock"
 
   - name: Install dependencies
-    if: steps.mix-cache.outputs.cache-hit != 'true'
+    if: steps.mix-build-dep-cache.outputs.cache-hit != 'true'
     run: mix deps.get
     shell: bash
     working-directory: ${{ inputs.working-directory }}

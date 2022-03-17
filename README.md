@@ -66,7 +66,7 @@ _Default_: ""
 
 ```yaml
 - name: Run elixir CI
-  uses: airnity/elixir-ci-action@v2
+  uses: airnity/elixir-ci-action@v3
   with:
     mix-env: dev
     working-directory: "./myApp"

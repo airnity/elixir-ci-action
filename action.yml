@@ -33,6 +33,14 @@ inputs:
     description: "Wether to upload the artifact or not"
     required: false
     default: 'False'
+  build-cache-key-suffix:
+    description: "Suffix to add to the build cache key"
+    required: false
+    default: ""
+  plt-cache-key-suffix:
+    description: "Suffix to add to the plt cache key"
+    required: false
+    default: ""
 
 runs:
   using: 'composite'
@@ -44,7 +52,7 @@ runs:
       path: |
         ${{inputs.working-directory}}/deps
         ${{inputs.working-directory}}/_build
-      key: ${{ runner.os }}-mix-build-dep-${{ inputs.mix-env }}-${{ hashFiles(env.HASH_FILES_PATH) }}
+      key: ${{ runner.os }}-mix-build-dep-${{ inputs.mix-env }}-${{ hashFiles(env.HASH_FILES_PATH) }}${{ inputs.build-cache-key-suffix }}
     env:
       HASH_FILES_PATH: "${{inputs.working-directory}}/mix.lock"
 
@@ -54,7 +62,7 @@ runs:
     with:
       path: |
         ${{inputs.working-directory}}/priv/plts
-      key: ${{ runner.os }}-mix-plt-${{ inputs.mix-env }}-${{ hashFiles(env.HASH_FILES_PATH) }}
+      key: ${{ runner.os }}-mix-plt-${{ inputs.mix-env }}-${{ hashFiles(env.HASH_FILES_PATH) }}${{ inputs.plt-cache-key-suffix }}
       restore-keys: |
         ${{ runner.os }}-mix-plt-${{ inputs.mix-env }}
         ${{ runner.os }}-mix-plt

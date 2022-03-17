@@ -27,7 +27,8 @@ _Default_: `test`
 Wether to run mix test or not.
 _Default_: `True`
 
-###  `tests-flags`
+### `tests-flags`
+
 Flags to add to append to the `mix test` command (e.g. `--only tag` or `--no-start`, etc.)
 _Default_: ''
 
@@ -51,6 +52,16 @@ _Default_: `release`
 Wether to upload the artifact or not.
 _Default_: `False`
 
+### `build-cache-key-suffix`
+
+Suffix to add to the build cache key
+_Default_: ""
+
+### `plt-cache-key-suffix`
+
+Suffix to add to the plt cache key
+_Default_: ""
+
 ## Example usage
 
 ```yaml
@@ -60,4 +71,5 @@ _Default_: `False`
     mix-env: dev
     working-directory: "./myApp"
     release: "True"
+    build-cache-key-suffix: "test"
 ```

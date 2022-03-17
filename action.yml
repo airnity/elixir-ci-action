@@ -41,6 +41,10 @@ inputs:
     description: "Suffix to add to the plt cache key"
     required: false
     default: ""
+  plt-restore-cache:
+    description: "If false it won't retrieve cache from other restore keys"
+    required: false
+    default: "True"
 
 runs:
   using: 'composite'
@@ -57,6 +61,7 @@ runs:
       HASH_FILES_PATH: "${{inputs.working-directory}}/mix.lock"
 
   - name: Restore plt cache
+    if: inputs.plt-restore-cache != 'False'
     id: mix-plt-cache
     uses: actions/cache@v2
     with:
@@ -66,6 +71,17 @@ runs:
       restore-keys: |
         ${{ runner.os }}-mix-plt-${{ inputs.mix-env }}
         ${{ runner.os }}-mix-plt
+    env:
+      HASH_FILES_PATH: "${{inputs.working-directory}}/mix.lock"
+
+  - name: Restore plt cache
+    if: inputs.plt-restore-cache == 'False'
+    id: mix-plt-cache
+    uses: actions/cache@v2
+    with:
+      path: |
+        ${{inputs.working-directory}}/priv/plts
+      key: ${{ runner.os }}-mix-plt-${{ inputs.mix-env }}-${{ hashFiles(env.HASH_FILES_PATH) }}${{ inputs.plt-cache-key-suffix }}
     env:
       HASH_FILES_PATH: "${{inputs.working-directory}}/mix.lock"
 

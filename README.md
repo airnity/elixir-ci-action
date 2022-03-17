@@ -62,14 +62,20 @@ _Default_: ""
 Suffix to add to the plt cache key
 _Default_: ""
 
+### `plt-restore-cache`
+
+If false it won't retrieve cache from other restore keys
+_Default_: "True"
+
 ## Example usage
 
 ```yaml
 - name: Run elixir CI
-  uses: airnity/elixir-ci-action@v3
+  uses: airnity/elixir-ci-action@v4
   with:
     mix-env: dev
     working-directory: "./myApp"
     release: "True"
     build-cache-key-suffix: "test"
+    plt-restore-cache: "False"
 ```

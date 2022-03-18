@@ -76,7 +76,7 @@ runs:
 
   - name: Restore plt cache
     if: inputs.plt-restore-cache == 'False'
-    id: mix-plt-cache
+    id: mix-plt-cache-no-restore
     uses: actions/cache@v2
     with:
       path: |

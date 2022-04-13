@@ -87,6 +87,7 @@ runs:
 
   - name: Destroy cache on retry
     if: github.run_attempt != '1'
+    working-directory: ${{ inputs.working-directory }}
     run: |
         mix deps.clean --all
         mix clean

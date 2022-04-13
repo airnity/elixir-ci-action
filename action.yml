@@ -85,6 +85,14 @@ runs:
     env:
       HASH_FILES_PATH: "${{inputs.working-directory}}/mix.lock"
 
+  - name: Destroy cache on retry
+    if: github.run_attempt != '1'
+    run: |
+        mix deps.clean --all
+        mix clean
+        rm -rf ${{inputs.working-directory}}/priv/plts
+      shell: sh
+
   - name: Install dependencies
     if: steps.mix-build-dep-cache.outputs.cache-hit != 'true'
     run: mix deps.get

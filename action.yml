@@ -91,7 +91,7 @@ runs:
         mix deps.clean --all
         mix clean
         rm -rf ${{inputs.working-directory}}/priv/plts
-      shell: sh
+    shell: sh
 
   - name: Install dependencies
     if: steps.mix-build-dep-cache.outputs.cache-hit != 'true'

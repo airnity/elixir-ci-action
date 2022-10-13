@@ -67,6 +67,11 @@ _Default_: ""
 If false it won't retrieve cache from other restore keys
 _Default_: "True"
 
+### `compile-options`
+
+the compile options parameter
+_Default_: `--warnings-as-errors`
+
 ## Example usage
 
 ```yaml

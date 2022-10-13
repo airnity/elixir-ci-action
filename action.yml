@@ -45,6 +45,11 @@ inputs:
     description: "If false it won't retrieve cache from other restore keys"
     required: false
     default: "True"
+  compile-options:
+    description: "Specify the compile option parameter"
+    required: false
+    default: "--warnings-as-errors"
+
 
 runs:
   using: 'composite'
@@ -105,8 +110,8 @@ runs:
     env:
       MIX_ENV: ${{ inputs.mix-env }}
 
-  - name: Compile prod with warnings as errors
-    run: mix compile --warnings-as-errors
+  - name: Compile prod with ${{ inputs.compile-options }}
+    run: mix compile ${{ inputs.compile-options }}
     shell: bash
     working-directory: ${{ inputs.working-directory }}
     env:
